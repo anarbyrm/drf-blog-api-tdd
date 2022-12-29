@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # project apps
     'posts',
+    'blog_users',
 
 ]
 
@@ -133,3 +134,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS= True
+
+AUTH_USER_MODEL = 'blog_users.User'
