@@ -1,4 +1,4 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from rest_framework.response import Response
@@ -23,3 +23,12 @@ class CreateAuthToken(ObtainAuthToken):
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key}, status=status.HTTP_201_CREATED) 
 
+
+class RetrieveUpdateProfileAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+        
