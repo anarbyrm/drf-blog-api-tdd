@@ -6,7 +6,7 @@ User = settings.AUTH_USER_MODEL
 
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='posts')
     title = models.CharField(max_length=255)
     body = models.TextField()
     slug = models.SlugField(null=True, blank=True)

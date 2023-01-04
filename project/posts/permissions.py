@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.exceptions import PermissionDenied
 
 
 class AuthorOrReadOnly(BasePermission):
@@ -12,3 +13,5 @@ class AuthorOrReadOnly(BasePermission):
             
         if obj.user == request.user:
             return True
+
+        raise PermissionDenied

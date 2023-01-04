@@ -17,3 +17,6 @@ class PostViewSet(ModelViewSet):
         if self.action == 'list':
             return PostSerializer
         return PostDetailSerializer
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
