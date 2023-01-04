@@ -10,5 +10,6 @@ urlpatterns = [
 
     # project app urls
     path('api/user/', include('blog_users.urls')),
+    path('api/posts/', include('posts.urls')),
 
 ]
