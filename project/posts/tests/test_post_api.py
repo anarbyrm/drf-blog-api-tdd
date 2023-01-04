@@ -65,5 +65,38 @@ class AuthenticatedUserPostApiTests(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
-    
+    def test_if_user_can_create_posts(self):
+        payload = {'title': 'new post', 'body': 'post body'}
+        response = self.client.post(POST_LIST_URL, payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        for key, value in payload.items():
+            self.assertEqual(response.data[key], value)
 
+
+    def test_if_user_can_update_his_posts(self):
+        post = create_post(user=self.user)
+        url = post_detail_url(post.id)
+        response = self.client.patch(url, {'title': 'Updated!'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'Updated!')
+
+    def test_if_user_can_delete_his_posts(self):
+        post = create_post(user=self.user)
+        url = post_detail_url(post.id)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+    
+    def test_if_user_can_update_someones_post(self):
+        user = create_user(email='test@example.com', password='testing123')
+        post = create_post(user=user)
+        url = post_detail_url(post.id)
+        response = self.client.patch(url, {'title': 'Updated someones post'})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_if_user_can_delete_someones_post(self):
+        user = create_user(email='test@example.com', password='testing123')
+        post = create_post(user=user)
+        url = post_detail_url(post.id)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
