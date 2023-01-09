@@ -1,3 +1,10 @@
+from drf_spectacular.utils import (
+    extend_schema_view,
+    extend_schema,
+    OpenApiParameter,
+    OpenApiTypes
+)
+
 from django.db.models import Q
 
 from rest_framework.viewsets import ModelViewSet
@@ -8,6 +15,15 @@ from .models import Post
 from .permissions import AuthorOrReadOnly
 
 
+
+
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter('search', OpenApiTypes.STR, description="string value for filtering posts")
+        ]
+    )
+)
 class PostViewSet(ModelViewSet):
     serializer_class = PostDetailSerializer
     queryset = Post.objects.all()
@@ -19,7 +35,7 @@ class PostViewSet(ModelViewSet):
         if search is not None:
             return self.queryset.filter(Q(title__icontains=search)|Q(body__icontains=search)).order_by('-created_at').distinct()
         return self.queryset
-        
+
     def get_serializer_class(self):
         if self.action == 'list':
             return PostSerializer
