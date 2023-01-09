@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import authentication
 
@@ -12,7 +14,12 @@ class PostViewSet(ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [AuthorOrReadOnly]
 
-
+    def get_queryset(self):
+        search = self.request.query_params.get('search', None)
+        if search is not None:
+            return self.queryset.filter(Q(title__icontains=search)|Q(body__icontains=search)).order_by('-created_at').distinct()
+        return self.queryset
+        
     def get_serializer_class(self):
         if self.action == 'list':
             return PostSerializer

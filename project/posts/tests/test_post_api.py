@@ -100,3 +100,14 @@ class AuthenticatedUserPostApiTests(TestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         
+    def test_if_search_works_correctly(self):
+        user = create_user(email='testuser2@example.com', password='testing123')
+        post = create_post(
+            user=user
+        )
+        params = {'search': 'My'}
+        response = self.client.get(POST_LIST_URL, params)
+        self.assertNotEqual(len(response.data), 1)
+        params = {'search': 'post'}
+        response = self.client.get(POST_LIST_URL, params)
+        self.assertEqual(len(response.data), 1)
