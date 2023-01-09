@@ -11,5 +11,6 @@ urlpatterns = [
     # project app urls
     path('api/user/', include('blog_users.urls')),
     path('api/', include('posts.urls')),
+    path('api/', include('comments.urls')),
 
 ]
